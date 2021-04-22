@@ -9,6 +9,7 @@ intranetware
 software
 intended
 establish
+computer
 networking
 company
 growing
@@ -40,6 +41,7 @@ users
 orem
 utah
 based
+full
 service
 access
 businesses
@@ -67,6 +69,8 @@ release
 fall
 compatible
 existing
+will
+allow
 companies
 preserve
 previous
@@ -152,11 +156,13 @@ mail
 feature
 deliver
 selected
+directly
 user
 box
 enhanced
 audio
 video
+three
 dimensional
 animation
 statement
@@ -178,9 +184,9 @@ compare
 confident
 scenario
 fare
+well
 agreed
 average
-indistinguishable
 terms
 quality
 pointed
@@ -195,10 +201,10 @@ requires
 operating
 systems
 windows
-nt
 versions
 apple
 macintosh
+system
 forthcoming
 rapidly
 expanding
@@ -231,9 +237,11 @@ executive
 officer
 bob
 massey
+despite
 quarter
 loss
 projected
+second
 outlook
 positive
 moving
@@ -243,6 +251,8 @@ telephone
 trends
 member
 revenue
+clearly
+going
 direction
 subscribers
 declined
@@ -271,11 +281,13 @@ expecting
 neighborhood
 earnings
 point
+forward
 earlier
 reported
 warned
 expects
 improvements
+half
 extremely
 positioned
 opportunities
@@ -304,6 +316,7 @@ licensee
 novice
 introduced
 months
+ago
 grew
 sprynet
 serviced
@@ -350,6 +363,7 @@ large
 corporations
 providing
 clandestine
+side
 payments
 discounts
 desktop
@@ -419,6 +433,7 @@ reason
 division
 return
 matter
+interest
 subject
 event
 requesting
@@ -450,6 +465,7 @@ maintenance
 contract
 chicago
 sprint
+top
 long
 distance
 sees
@@ -487,12 +503,14 @@ edge
 package
 deals
 pretty
+best
 economics
 cost
 structure
 data
 capabilities
 adding
+currently
 discussing
 entertainment
 initially
@@ -516,10 +534,12 @@ colombo
 analyst
 bear
 stearns
+co
 fact
 don
 lost
 ground
+help
 retain
 slight
 pressure
@@ -575,6 +595,7 @@ proprietary
 revisions
 gradually
 compliant
+consequently
 perceived
 loop
 tide
@@ -605,6 +626,7 @@ demonstrating
 conference
 hope
 convince
+associated
 combine
 reliability
 robustness
@@ -613,6 +635,7 @@ easy
 stood
 lose
 distinction
+move
 mark
 levitt
 risk
@@ -626,6 +649,7 @@ relied
 ripe
 solutions
 hit
+on
 people
 accepting
 installed
@@ -668,10 +692,12 @@ introductory
 price
 larry
 weber
+call
 set
 hot
 discounted
 december
+low
 reflects
 intention
 distribute
@@ -716,6 +742,7 @@ spreadsheets
 programmers
 transformations
 programmer
+bottom
 tier
 included
 ability
@@ -785,6 +812,7 @@ abandoning
 comforts
 giant
 building
+seriously
 wealthy
 process
 alex
@@ -868,6 +896,7 @@ pedestrian
 salary
 progression
 crack
+serious
 wealth
 workaholics
 enjoy
@@ -880,6 +909,7 @@ consultant
 bruneau
 coba
 mid
+course
 safe
 greater
 evolving
@@ -1014,8 +1044,10 @@ funds
 performing
 domestic
 tracked
+it
 range
 incredibly
+minus
 outperform
 continued
 attractive
@@ -1051,6 +1083,7 @@ equivalent
 andcommon
 equivalentshares
 tocompute
+twelve
 notes
 enters
 chose
@@ -1099,10 +1132,12 @@ generate
 crucial
 battleground
 generation
+front
 dominates
 determine
 betting
 inroads
+bill
 gates
 tenaciously
 defends
@@ -1130,6 +1165,7 @@ broad
 ramifications
 hard
 bet
+amount
 resources
 throwing
 formidable
@@ -1148,6 +1184,7 @@ continues
 heat
 innovative
 damning
+thing
 leverage
 control
 looms
@@ -1166,7 +1203,9 @@ cheyenne
 fourth
 charge
 compared
+better
 limited
+versus
 pro
 forma
 intimate
@@ -1200,6 +1239,7 @@ pirated
 compact
 disc
 investigator
+sixty
 copies
 disks
 haul
@@ -1226,6 +1266,7 @@ taipei
 tech
 mln
 wsj
+ten
 powerful
 investing
 startups
@@ -1475,6 +1516,7 @@ delayed
 walnut
 creek
 popular
+in
 enhancements
 shipped
 delay
@@ -1510,6 +1552,7 @@ streets
 fly
 perform
 missions
+allows
 golfers
 play
 greens
