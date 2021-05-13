@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreluareText", "PreluareText\PreluareText.csproj", "{0C624DBF-02B9-4D49-8E81-118ECA18B602}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PreluareText", "PreluareText\PreluareText.csproj", "{0C624DBF-02B9-4D49-8E81-118ECA18B602}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Porter2Stemmer", "..\porter2-stemmer\Porter2Stemmer\Porter2Stemmer.csproj", "{B9135912-A3BE-4967-A21D-6083D45417E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{0C624DBF-02B9-4D49-8E81-118ECA18B602}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C624DBF-02B9-4D49-8E81-118ECA18B602}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C624DBF-02B9-4D49-8E81-118ECA18B602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9135912-A3BE-4967-A21D-6083D45417E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9135912-A3BE-4967-A21D-6083D45417E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9135912-A3BE-4967-A21D-6083D45417E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9135912-A3BE-4967-A21D-6083D45417E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

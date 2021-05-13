@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v3.1": {
       "PreluareText/1.0.0": {
+        "dependencies": {
+          "Porter2Stemmer": "1.0.0"
+        },
         "runtime": {
           "PreluareText.dll": {}
+        }
+      },
+      "Porter2Stemmer/1.0.0": {
+        "runtime": {
+          "Porter2Stemmer.dll": {}
         }
       }
     }
   },
   "libraries": {
     "PreluareText/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Porter2Stemmer/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -15,9 +15,14 @@ namespace PreluareText
         public string reuters34FilePath = @"F:\Information_retrieval\Reuters_34";
         public string reuters7083FilePath = @"F:\Information_retrieval\Reuters_7083";
 
-        public List<string> allWords;
+        public List<string> allWords = new List<string>();
         public List<string> stpWords;
+        public List<string> uniqueWords;
+        public List<string> fileNames = new List<string>();
+        public List<Dictionary<string, int>> documentsListsOfWords = new List<Dictionary<string, int>>();
+
         public int eliminatedStopwords = 0;
+
 
         public List<string> getStopwords(string filepath)
         {
@@ -39,86 +44,87 @@ namespace PreluareText
             }
         }
 
-        public List<string> words(string t, string tx)
+        public void words(string t, string tx)
         {
             char[] separators = new char[] { ' ', ',', '?', '!', '"', ':', ';', '{', '}', '(', ')',
                                                 '/', '#', '@', '$', '%', '*', '-', '&', '^', '|', '\t',
-                                                '\b','\r','\v','\f','\'','+'
+                                                '\b','\r','\v','\f','\'','+','\\'
             };
 
             DirectoryInfo my_directory = new DirectoryInfo(reuters34FilePath);
             FileInfo[] file_info = my_directory.GetFiles("*.xml");
             XmlDocument my_xml_doc = new XmlDocument();
 
-            List<string> allWords = new List<string>();
-
             foreach (FileInfo file in file_info)
             {
-                string[] titleWords, textWords;
+                this.fileNames.Add(file.Name);
+
+                string[] wordsFromXML;
+                string wordsWelded;
 
                 my_xml_doc.Load(file.FullName);
 
-                XmlNode titleNode = my_xml_doc.DocumentElement.SelectSingleNode(t);
-                XmlNode textNode = my_xml_doc.DocumentElement.SelectSingleNode(tx);
+                XmlNodeList titleNode = my_xml_doc.DocumentElement.GetElementsByTagName(t);
+                XmlNodeList textNode = my_xml_doc.DocumentElement.GetElementsByTagName(tx);
 
-                titleWords = titleNode.InnerText.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
-                textWords = textNode.InnerText.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+                wordsWelded = titleNode[0].InnerText + textNode[0].InnerText;
 
-                List<string> listTitle = titleWords.ToList();
-                List<string> listText = textWords.ToList();
+                wordsFromXML = wordsWelded.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
 
-                for (int i = 0; i < listTitle.Count(); i++)
+                List<string> fileWordsList = wordsFromXML.ToList();
+
+                for (int i = 0; i < fileWordsList.Count(); i++)
                 {
-                    listTitle[i] = listTitle[i].ToLower().Trim();
+                    fileWordsList[i] = fileWordsList[i].ToLower().Trim();
 
-                    listTitle[i] = Regex.Replace(listTitle[i], @"[\d-]", string.Empty);
+                    fileWordsList[i] = Regex.Replace(fileWordsList[i], @"[\d-]", string.Empty);
 
-                    if (listTitle[i] == "." || listTitle[i] == "..." || listTitle[i].Length <= 2)
+                    if (fileWordsList[i] == "." || fileWordsList[i] == "..." || fileWordsList[i].Length <= 2)
                     {
-                        listTitle[i] = string.Empty;
+                        fileWordsList[i] = string.Empty;
                     }
 
-                    if (Regex.IsMatch(listTitle[i], @"(?:[a-zA-Z]\.){2,}"))
+                    if (Regex.IsMatch(fileWordsList[i], @"(?:[a-zA-Z]\.){2,}"))
                     {
                         string temp = null;
-                        for (int k = 0; k < listTitle[i].Length; k++)
+                        for (int k = 0; k < fileWordsList[i].Length; k++)
                         {
-                            if (!(listTitle[i][k] == '.'))
+                            if (!(fileWordsList[i][k] == '.'))
                             {
-                                temp += listTitle[i][k];
+                                temp += fileWordsList[i][k];
                             }
                         }
-                        listTitle[i] = temp;
+                        fileWordsList[i] = temp;
                     }
 
 
-                    if (!string.IsNullOrEmpty(listTitle[i]) && listTitle[i].Contains("."))
+                    if (!string.IsNullOrEmpty(fileWordsList[i]) && fileWordsList[i].Contains("."))
                     {
 
-                        if (listTitle[i].IndexOf(".") == (listTitle[i].Length - 1))
+                        if (fileWordsList[i].IndexOf(".") == (fileWordsList[i].Length - 1))
                         {
-                            listTitle[i] = listTitle[i].Substring(0, (listTitle[i].Length - 1));
+                            fileWordsList[i] = fileWordsList[i].Substring(0, (fileWordsList[i].Length - 1));
                         }
-                        else if (listTitle[i].IndexOf(".") == 0)
+                        else if (fileWordsList[i].IndexOf(".") == 0)
                         {
-                            listTitle[i] = listTitle[i].Substring(1, (listTitle[i].Length - 1));
+                            fileWordsList[i] = fileWordsList[i].Substring(1, (fileWordsList[i].Length - 1));
                         }
                         else
                         {
                             //Co.. eroare
                             //cand e punctul altundeva
-                            var temp = listTitle[i].Split('.');
+                            var temp = fileWordsList[i].Split('.');
 
                             foreach (string s in temp)
                             {
                                 if (s.Length > 1)
                                 {
-                                    listTitle[i] = string.Empty;
+                                    fileWordsList[i] = string.Empty;
                                     for (int k = temp.Count() - 1; k >= 0; k--)
                                     {
                                         if (temp[k] != string.Empty && temp[k].Length > 2)
                                         {
-                                            listTitle.Insert(i, temp[k]);
+                                            fileWordsList.Insert(i, temp[k]);
                                         }
                                     }
                                 }
@@ -126,77 +132,27 @@ namespace PreluareText
                         }
                     }
 
-
-                    if (!string.IsNullOrEmpty(listTitle[i]))
+                  
+                    if (!string.IsNullOrEmpty(fileWordsList[i]))
                     {
-                        allWords.Add(listTitle[i]);
+                        this.allWords.Add(fileWordsList[i]);
                     }
                 }
 
-                for (int i = 0; i < listText.Count(); i++)
+                fileWordsList = fileWordsList.Where(w => !string.IsNullOrWhiteSpace(w)).ToList();
+                List<string> uniqueWordsFromEachFile = new List<string>();
+                uniqueWordsFromEachFile = getUniqueWords(fileWordsList);
+                Dictionary<string, int> wordsAndFrequencyFromEachFile = new Dictionary<string, int>();
+
+                for (int k = 0; k < uniqueWordsFromEachFile.Count(); k++)
                 {
-                    listText[i] = listText[i].ToLower().Trim();
-
-                    listText[i] = Regex.Replace(listText[i], @"[\d-]", string.Empty);
-
-                    if (Regex.IsMatch(listText[i], @"(?:[a-zA-Z]\.){2,}"))
-                    {
-                        string temp = null;
-                        for (int k = 0; k < listText[i].Length; k++)
-                        {
-                            if (!(listText[i][k] == '.'))
-                            {
-                                temp += listText[i][k];
-                            }
-                        }
-                        listText[i] = temp;
-                    }
-
-                    if (listText[i] == "." || listText[i] == "..." || listText[i].Length <= 2)
-                    {
-                        listText[i] = string.Empty;
-                    }
-
-                    if (!string.IsNullOrEmpty(listText[i]) && listText[i].Contains("."))
-                    {
-                        if (listText[i].IndexOf(".") == (listText[i].Length - 1))
-                        {
-                            listText[i] = listText[i].Substring(0, (listText[i].Length - 1));
-                        }
-                        else if (listText[i].IndexOf(".") == 0)
-                        {
-                            listText[i] = listText[i].Substring(1, (listText[i].Length - 1));
-                        }
-                        else
-                        {
-                            var temp = listText[i].Split('.');
-
-                            foreach (string s in temp)
-                            {
-                                if (s.Length > 1)
-                                {
-                                    listText[i] = string.Empty;
-                                    for (int k = temp.Count() - 1; k >= 0; k--)
-                                    {
-                                        if (temp[k] != string.Empty && temp[k].Length > 2)
-                                        {
-                                            listText.Insert(i, temp[k]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-
-                    if (!string.IsNullOrEmpty(listText[i]))
-                    {
-                        allWords.Add(listText[i]);
-                    }
+                    int numberOfAppearances = fileWordsList.Count(word => word == uniqueWordsFromEachFile[k]);
+                    wordsAndFrequencyFromEachFile.Add(uniqueWordsFromEachFile[k], numberOfAppearances);
                 }
+                this.documentsListsOfWords.Add(wordsAndFrequencyFromEachFile);
 
             }
-            return allWords;
+            this.allWords.Sort();           
         }
 
         public void removeStopWords(List<string> words, List<string> stopwords)
@@ -226,6 +182,20 @@ namespace PreluareText
                 {
                     outputFile.WriteLine(s);
                 }
+        }
+
+        public List<string> getUniqueWords(List<string> wordsList)
+        {
+            List<string> unique = new List<string>();
+            for (int i = 0; i < wordsList.Count(); i++)
+            {
+                if (!unique.Contains(wordsList[i]))
+                {
+                    unique.Add(wordsList[i]);
+                }
+            }
+            unique.Sort();
+            return unique;
         }
 
     }

@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "Porter2Stemmer/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/Porter2Stemmer.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Porter2Stemmer.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Porter2Stemmer/1.0.0": {
+      "type": "project",
+      "path": "../../porter2-stemmer/Porter2Stemmer/Porter2Stemmer.csproj",
+      "msbuildProject": "../../porter2-stemmer/Porter2Stemmer/Porter2Stemmer.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "Porter2Stemmer >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\mariu\\.nuget\\packages\\": {}
@@ -33,7 +52,11 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
-          "projectReferences": {}
+          "projectReferences": {
+            "F:\\Information_retrieval\\porter2-stemmer\\Porter2Stemmer\\Porter2Stemmer.csproj": {
+              "projectPath": "F:\\Information_retrieval\\porter2-stemmer\\Porter2Stemmer\\Porter2Stemmer.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

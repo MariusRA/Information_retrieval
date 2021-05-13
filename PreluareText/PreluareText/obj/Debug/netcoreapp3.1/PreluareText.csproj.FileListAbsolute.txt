@@ -30,10 +30,14 @@ F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\Prelu
 F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\PreluareText.runtimeconfig.dev.json
 F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\PreluareText.dll
 F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\PreluareText.pdb
+F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\Porter2Stemmer.dll
+F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\Porter2Stemmer.pdb
+F:\Information_retrieval\PreluareText\PreluareText\bin\Debug\netcoreapp3.1\Porter2Stemmer.xml
+F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.csprojAssemblyReference.cache
 F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.AssemblyInfoInputs.cache
 F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.AssemblyInfo.cs
 F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.csproj.CoreCompileInputs.cache
+F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.csproj.CopyComplete
 F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.dll
 F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.pdb
 F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.genruntimeconfig.cache
-F:\Information_retrieval\PreluareText\PreluareText\obj\Debug\netcoreapp3.1\PreluareText.csprojAssemblyReference.cache
