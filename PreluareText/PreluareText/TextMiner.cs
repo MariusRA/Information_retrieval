@@ -14,12 +14,17 @@ namespace PreluareText
         public string stopWordsFilePath = @"F:\Information_retrieval\PreluareText\stop_words_english.txt";
         public string reuters34FilePath = @"F:\Information_retrieval\Reuters_34";
         public string reuters7083FilePath = @"F:\Information_retrieval\Reuters_7083";
+        public int reuters34Number = 34;
+        public int reuters7083Number = 7083;
 
         public List<string> allWords = new List<string>();
         public List<string> stpWords;
         public List<string> uniqueWords;
         public List<string> fileNames = new List<string>();
+        public List<string> documentsTopics = new List<string>();
         public List<Dictionary<string, int>> documentsListsOfWords = new List<Dictionary<string, int>>();
+
+        public int[,] frequencyMatrix;
 
         public int eliminatedStopwords = 0;
 
@@ -55,6 +60,8 @@ namespace PreluareText
             FileInfo[] file_info = my_directory.GetFiles("*.xml");
             XmlDocument my_xml_doc = new XmlDocument();
 
+            this.stpWords = getStopwords(stopWordsFilePath);
+
             foreach (FileInfo file in file_info)
             {
                 this.fileNames.Add(file.Name);
@@ -66,6 +73,14 @@ namespace PreluareText
 
                 XmlNodeList titleNode = my_xml_doc.DocumentElement.GetElementsByTagName(t);
                 XmlNodeList textNode = my_xml_doc.DocumentElement.GetElementsByTagName(tx);
+
+                XmlNodeList topicNode = my_xml_doc.GetElementsByTagName("metadata");
+
+                foreach (XmlNode node in topicNode)
+                {
+                    var l = node.SelectNodes("/newsitem/metadata/codes");
+                    this.documentsTopics.Add(l[2].FirstChild.Attributes[0].Value);
+                }
 
                 wordsWelded = titleNode[0].InnerText + textNode[0].InnerText;
 
@@ -132,14 +147,16 @@ namespace PreluareText
                         }
                     }
 
-                  
+
                     if (!string.IsNullOrEmpty(fileWordsList[i]))
                     {
                         this.allWords.Add(fileWordsList[i]);
                     }
                 }
-
+                removeStopWords(this.allWords, this.stpWords);
                 fileWordsList = fileWordsList.Where(w => !string.IsNullOrWhiteSpace(w)).ToList();
+
+                removeStopWords(fileWordsList, this.stpWords);
                 List<string> uniqueWordsFromEachFile = new List<string>();
                 uniqueWordsFromEachFile = getUniqueWords(fileWordsList);
                 Dictionary<string, int> wordsAndFrequencyFromEachFile = new Dictionary<string, int>();
@@ -152,7 +169,7 @@ namespace PreluareText
                 this.documentsListsOfWords.Add(wordsAndFrequencyFromEachFile);
 
             }
-            this.allWords.Sort();           
+            this.allWords.Sort();
         }
 
         public void removeStopWords(List<string> words, List<string> stopwords)
@@ -196,6 +213,28 @@ namespace PreluareText
             }
             unique.Sort();
             return unique;
+        }
+
+        public int[,] buildFrequencyMatrix(int[,] matrix)
+        {
+            int line = 0;
+
+            foreach (var doc in this.documentsListsOfWords)
+            {
+                foreach (var row in doc)
+                {
+                    for (int column = 0; column < this.uniqueWords.Count(); column++)
+                    {
+                        if (row.Key == this.uniqueWords[column])
+                        {
+                            matrix[line, column] = row.Value;
+                            break;
+                        }
+                    }
+                }
+                line++;
+            }
+            return matrix;
         }
 
     }
