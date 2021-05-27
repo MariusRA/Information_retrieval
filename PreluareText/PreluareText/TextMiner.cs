@@ -22,6 +22,9 @@ namespace PreluareText
         public List<string> uniqueWords;
         public List<string> fileNames = new List<string>();
         public List<string> documentsTopics = new List<string>();
+        public List<List<double>> normalisedVectors = new List<List<double>>();
+
+        public Dictionary<string, int> topicsAndNumberOfAppearances = new Dictionary<string, int>();
         public List<Dictionary<string, int>> documentsListsOfWords = new List<Dictionary<string, int>>();
 
         public int[,] frequencyMatrix;
@@ -49,7 +52,7 @@ namespace PreluareText
             }
         }
 
-        public void words(string t, string tx)
+        public void wordsFromTags(string tag1, string tag2)
         {
             char[] separators = new char[] { ' ', ',', '?', '!', '"', ':', ';', '{', '}', '(', ')',
                                                 '/', '#', '@', '$', '%', '*', '-', '&', '^', '|', '\t',
@@ -71,8 +74,8 @@ namespace PreluareText
 
                 my_xml_doc.Load(file.FullName);
 
-                XmlNodeList titleNode = my_xml_doc.DocumentElement.GetElementsByTagName(t);
-                XmlNodeList textNode = my_xml_doc.DocumentElement.GetElementsByTagName(tx);
+                XmlNodeList titleNode = my_xml_doc.DocumentElement.GetElementsByTagName(tag1);
+                XmlNodeList textNode = my_xml_doc.DocumentElement.GetElementsByTagName(tag2);
 
                 XmlNodeList topicNode = my_xml_doc.GetElementsByTagName("metadata");
 
@@ -153,22 +156,50 @@ namespace PreluareText
                         this.allWords.Add(fileWordsList[i]);
                     }
                 }
-                removeStopWords(this.allWords, this.stpWords);
-                fileWordsList = fileWordsList.Where(w => !string.IsNullOrWhiteSpace(w)).ToList();
+
+                fileWordsList = fileWordsList.Where(word => !string.IsNullOrWhiteSpace(word)).ToList();
 
                 removeStopWords(fileWordsList, this.stpWords);
                 List<string> uniqueWordsFromEachFile = new List<string>();
                 uniqueWordsFromEachFile = getUniqueWords(fileWordsList);
                 Dictionary<string, int> wordsAndFrequencyFromEachFile = new Dictionary<string, int>();
 
+                int maxValueFromDocument = -1;
+
                 for (int k = 0; k < uniqueWordsFromEachFile.Count(); k++)
                 {
                     int numberOfAppearances = fileWordsList.Count(word => word == uniqueWordsFromEachFile[k]);
                     wordsAndFrequencyFromEachFile.Add(uniqueWordsFromEachFile[k], numberOfAppearances);
+
+                    if (numberOfAppearances > maxValueFromDocument)
+                    {
+                        maxValueFromDocument = numberOfAppearances;//max n(r,t) frecventa de aparitie cea mai mare din documentul respectiv
+                    }
+
                 }
+
                 this.documentsListsOfWords.Add(wordsAndFrequencyFromEachFile);
 
+                //normalizare
+                List<double> normalisedVectorForCurrentFile = new List<double>();
+                foreach (var line in wordsAndFrequencyFromEachFile)
+                {
+                    double value = (double)line.Value / maxValueFromDocument;
+                    normalisedVectorForCurrentFile.Add(value);
+                }
+                this.normalisedVectors.Add(normalisedVectorForCurrentFile);
+
             }
+
+            this.documentsTopics.Sort();
+            List<string> documentsTopicsUnique = getUniqueWords(documentsTopics);
+            for (int l = 0; l < documentsTopicsUnique.Count(); l++)
+            {
+                int numberOfAppearances = documentsTopics.Count(word => word == documentsTopicsUnique[l]);
+                this.topicsAndNumberOfAppearances.Add(documentsTopicsUnique[l], numberOfAppearances);
+            }
+
+            removeStopWords(this.allWords, this.stpWords);
             this.allWords.Sort();
         }
 
@@ -235,6 +266,124 @@ namespace PreluareText
                 line++;
             }
             return matrix;
+        }
+
+        public void wordsFromQuery(string query)
+        {
+            char[] separators = new char[] { ' ', ',', '?', '!', '"', ':', ';', '{', '}', '(', ')',
+                                                '/', '#', '@', '$', '%', '*', '-', '&', '^', '|', '\t',
+                                                '\b','\r','\v','\f','\'','+','\\'
+            };
+
+            this.fileNames.Add("query1");
+
+            string[] wordsFromQuery;
+
+            wordsFromQuery = query.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> queryWordsList = wordsFromQuery.ToList();
+
+            for (int i = 0; i < queryWordsList.Count(); i++)
+            {
+                queryWordsList[i] = queryWordsList[i].ToLower().Trim();
+
+                queryWordsList[i] = Regex.Replace(queryWordsList[i], @"[\d-]", string.Empty);
+
+                if (queryWordsList[i] == "." || queryWordsList[i] == "..." || queryWordsList[i].Length <= 2)
+                {
+                    queryWordsList[i] = string.Empty;
+                }
+
+                if (Regex.IsMatch(queryWordsList[i], @"(?:[a-zA-Z]\.){2,}"))
+                {
+                    string temp = null;
+                    for (int k = 0; k < queryWordsList[i].Length; k++)
+                    {
+                        if (!(queryWordsList[i][k] == '.'))
+                        {
+                            temp += queryWordsList[i][k];
+                        }
+                    }
+                    queryWordsList[i] = temp;
+                }
+
+
+                if (!string.IsNullOrEmpty(queryWordsList[i]) && queryWordsList[i].Contains("."))
+                {
+
+                    if (queryWordsList[i].IndexOf(".") == (queryWordsList[i].Length - 1))
+                    {
+                        queryWordsList[i] = queryWordsList[i].Substring(0, (queryWordsList[i].Length - 1));
+                    }
+                    else if (queryWordsList[i].IndexOf(".") == 0)
+                    {
+                        queryWordsList[i] = queryWordsList[i].Substring(1, (queryWordsList[i].Length - 1));
+                    }
+                    else
+                    {
+                        //Co.. eroare
+                        //cand e punctul altundeva
+                        var temp = queryWordsList[i].Split('.');
+
+                        foreach (string s in temp)
+                        {
+                            if (s.Length > 1)
+                            {
+                                queryWordsList[i] = string.Empty;
+                                for (int k = temp.Count() - 1; k >= 0; k--)
+                                {
+                                    if (temp[k] != string.Empty && temp[k].Length > 2)
+                                    {
+                                        queryWordsList.Insert(i, temp[k]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                if (!string.IsNullOrEmpty(queryWordsList[i]))
+                {
+                    this.allWords.Add(queryWordsList[i]);
+                }
+            }
+
+            queryWordsList = queryWordsList.Where(word => !string.IsNullOrWhiteSpace(word)).ToList();
+
+            removeStopWords(queryWordsList, this.stpWords);
+            List<string> uniqueWordsFromQuery = new List<string>();
+            uniqueWordsFromQuery = getUniqueWords(queryWordsList);
+            Dictionary<string, int> wordsAndFrequencyFromQuery = new Dictionary<string, int>();
+
+            int maxValueFromQuery = -1;
+
+            for (int k = 0; k < uniqueWordsFromQuery.Count(); k++)
+            {
+                int numberOfAppearances = queryWordsList.Count(word => word == uniqueWordsFromQuery[k]);
+                wordsAndFrequencyFromQuery.Add(uniqueWordsFromQuery[k], numberOfAppearances);
+
+                if (numberOfAppearances > maxValueFromQuery)
+                {
+                    maxValueFromQuery = numberOfAppearances;//max n(r,t) frecventa de aparitie cea mai mare din documentul respectiv
+                }
+
+            }
+
+            this.documentsListsOfWords.Add(wordsAndFrequencyFromQuery);
+
+            //normalizare
+            List<double> normalisedVectorForQuery = new List<double>();
+            foreach (var line in wordsAndFrequencyFromQuery)
+            {
+                double value = (double)line.Value / maxValueFromQuery;
+                normalisedVectorForQuery.Add(value);
+            }
+            this.normalisedVectors.Add(normalisedVectorForQuery);           
+
+            removeStopWords(this.allWords, this.stpWords);
+            this.allWords.Sort();
+
         }
 
     }

@@ -19,34 +19,41 @@ namespace PreluareText
 
             TextMiner textMiner = new TextMiner();
 
-            textMiner.words("title", "text");
+            textMiner.wordsFromTags("title", "text");
 
-            //textMiner.stpWords = textMiner.getStopwords(textMiner.stopWordsFilePath);
-            //textMiner.removeStopWords(textMiner.allWords, textMiner.stpWords);
+            string query = "It said Monday that more than one million" +
+                " users have downloaded its latest Internet Explorer version in its first week of availability.";
 
-            //EnglishPorter2Stemmer stemmer = new EnglishPorter2Stemmer();
-            //for (int k = 0; k < textMiner.allWords.Count(); k++)
-            //{
-            //    textMiner.allWords[k] = stemmer.Stem(textMiner.allWords[k]).Value;
-            //}
+            textMiner.wordsFromQuery(query);
 
             textMiner.uniqueWords = textMiner.getUniqueWords(textMiner.allWords);
+       
 
-
-            int[,] freqM = new int[textMiner.reuters34Number, textMiner.uniqueWords.Count()];
+            int[,] freqM = new int[textMiner.reuters34Number+1, textMiner.uniqueWords.Count()];
             textMiner.frequencyMatrix = textMiner.buildFrequencyMatrix(freqM);
 
-            textMiner.writeWordsToFile(textMiner.allWords, @"F:\Information_retrieval\PreluareText\cuvinte.txt");
-            textMiner.writeWordsToFile(textMiner.uniqueWords, @"F:\Information_retrieval\PreluareText\cuvinte_unice.txt");
+            Console.WriteLine("Total number of words: " + textMiner.allWords.Count());
+            Console.WriteLine("Number of stopwords: " + textMiner.stpWords.Count());
+            Console.WriteLine("Number of unique words: " + textMiner.uniqueWords.Count());
+            Console.WriteLine("Number of eliminated stopwords: " + textMiner.eliminatedStopwords);
 
-            Console.WriteLine(textMiner.allWords.Count());
-            Console.WriteLine(textMiner.stpWords.Count());
-            Console.WriteLine(textMiner.uniqueWords.Count());
-            Console.WriteLine(textMiner.eliminatedStopwords);
-
-            foreach(var x in textMiner.documentsTopics)
+           
+          
+            foreach(var val in textMiner.documentsListsOfWords)
             {
-                Console.WriteLine(x);
+                int ct = 0;
+                int maxval = -1;
+                foreach (var x in val)
+                {
+                    if (x.Value > maxval)
+                    {
+                        maxval = x.Value;
+                    }
+                    Console.WriteLine(x);
+                    ct++;
+                }
+                Console.WriteLine(ct);
+                Console.WriteLine(maxval);
             }
 
         }
