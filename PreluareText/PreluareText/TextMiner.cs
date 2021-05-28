@@ -27,6 +27,8 @@ namespace PreluareText
         public List<int> documentsMaxValue = new List<int>();
         public List<double> similarity = new List<double>();
 
+        public Dictionary<double, string> similarityAndDocName = new Dictionary<double, string>();
+
         public Dictionary<string, int> topicsAndNumberOfAppearances = new Dictionary<string, int>();
         public List<Dictionary<string, int>> documentsListsOfWords = new List<Dictionary<string, int>>();
 
@@ -62,7 +64,7 @@ namespace PreluareText
                                                 '\b','\r','\v','\f','\'','+','\\'
             };
 
-            DirectoryInfo my_directory = new DirectoryInfo(reuters7083FilePath);
+            DirectoryInfo my_directory = new DirectoryInfo(reuters34FilePath);
             FileInfo[] file_info = my_directory.GetFiles("*.xml");
             XmlDocument my_xml_doc = new XmlDocument();
 
@@ -422,7 +424,7 @@ namespace PreluareText
 
         public void similarityCalculation(int lineOfQuery, int lines, int columns, double[,] matrix)
         {
-            int lineMatrix = 0;
+            int lineMatrix = 0; //each line in the matrix is a document
 
             while (lineMatrix < lines - 1)
             {
@@ -434,6 +436,16 @@ namespace PreluareText
                 this.similarity.Add((double)Math.Sqrt(sum));
                 lineMatrix++;
             }
+        }
+
+        public void orderRelevantDocuments()
+        {
+            for(int i = 0; i < this.similarity.Count(); i++)
+            {
+                this.similarityAndDocName.Add(similarity[i], fileNames[i]);
+            }
+
+            this.similarityAndDocName = this.similarityAndDocName.OrderBy(obj => obj.Key).ToDictionary(obj => obj.Key, obj => obj.Value);
         }
 
     }

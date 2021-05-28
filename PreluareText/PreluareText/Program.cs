@@ -31,26 +31,40 @@ namespace PreluareText
             double[,] freqM = new double[textMiner.reuters7083Number+1, textMiner.uniqueWords.Count()];
             textMiner.frequencyMatrix = textMiner.buildFrequencyMatrix(freqM);
 
+
+            Console.WriteLine();
+            Console.WriteLine();
+
             Console.WriteLine("Total number of words: " + textMiner.allWords.Count());
             Console.WriteLine("Number of stopwords: " + textMiner.stpWords.Count());
             Console.WriteLine("Number of unique words: " + textMiner.uniqueWords.Count());
             Console.WriteLine("Number of eliminated stopwords: " + textMiner.eliminatedStopwords);
 
-            textMiner.frequencyMatrix = textMiner.normalise(textMiner.frequencyMatrix, 7084, textMiner.uniqueWords.Count());
+            textMiner.frequencyMatrix = textMiner.normalise(textMiner.frequencyMatrix, 35, textMiner.uniqueWords.Count());
 
-            textMiner.similarityCalculation(7083, 7084, textMiner.uniqueWords.Count(), textMiner.frequencyMatrix);
+            textMiner.similarityCalculation(34, 35, textMiner.uniqueWords.Count(), textMiner.frequencyMatrix);
 
-            for (int i = 0; i < textMiner.similarity.Count(); i++)
+            Console.WriteLine();
+            Console.WriteLine();
+
+            textMiner.orderRelevantDocuments();
+
+            foreach (var v in textMiner.similarityAndDocName)
             {
-                Console.WriteLine(textMiner.similarity[i]);
+                Console.WriteLine(v);
             }
 
-            string path = @"F:\Information_retrieval\PreluareText\similaritati.txt";
-            using (StreamWriter outputFile = new StreamWriter(path))
-                foreach (var s in textMiner.similarity)
-                {
-                    outputFile.WriteLine(s);
-                }
+            //for (int i = 0; i < textMiner.similarity.Count(); i++)
+            //{
+            //    Console.WriteLine(textMiner.similarity[i]);
+            //}
+
+            //string path = @"F:\Information_retrieval\PreluareText\similaritati.txt";
+            //using (StreamWriter outputFile = new StreamWriter(path))
+            //    foreach (var s in textMiner.similarity)
+            //    {
+            //        outputFile.WriteLine(s);
+            //    }
 
         }
     }
