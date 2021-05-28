@@ -28,8 +28,7 @@ namespace PreluareText
 
             textMiner.uniqueWords = textMiner.getUniqueWords(textMiner.allWords);
        
-
-            int[,] freqM = new int[textMiner.reuters34Number+1, textMiner.uniqueWords.Count()];
+            double[,] freqM = new double[textMiner.reuters7083Number+1, textMiner.uniqueWords.Count()];
             textMiner.frequencyMatrix = textMiner.buildFrequencyMatrix(freqM);
 
             Console.WriteLine("Total number of words: " + textMiner.allWords.Count());
@@ -37,24 +36,21 @@ namespace PreluareText
             Console.WriteLine("Number of unique words: " + textMiner.uniqueWords.Count());
             Console.WriteLine("Number of eliminated stopwords: " + textMiner.eliminatedStopwords);
 
-           
-          
-            foreach(var val in textMiner.documentsListsOfWords)
+            textMiner.frequencyMatrix = textMiner.normalise(textMiner.frequencyMatrix, 7084, textMiner.uniqueWords.Count());
+
+            textMiner.similarityCalculation(7083, 7084, textMiner.uniqueWords.Count(), textMiner.frequencyMatrix);
+
+            for (int i = 0; i < textMiner.similarity.Count(); i++)
             {
-                int ct = 0;
-                int maxval = -1;
-                foreach (var x in val)
-                {
-                    if (x.Value > maxval)
-                    {
-                        maxval = x.Value;
-                    }
-                    Console.WriteLine(x);
-                    ct++;
-                }
-                Console.WriteLine(ct);
-                Console.WriteLine(maxval);
+                Console.WriteLine(textMiner.similarity[i]);
             }
+
+            string path = @"F:\Information_retrieval\PreluareText\similaritati.txt";
+            using (StreamWriter outputFile = new StreamWriter(path))
+                foreach (var s in textMiner.similarity)
+                {
+                    outputFile.WriteLine(s);
+                }
 
         }
     }

@@ -24,10 +24,13 @@ namespace PreluareText
         public List<string> documentsTopics = new List<string>();
         public List<List<double>> normalisedVectors = new List<List<double>>();
 
+        public List<int> documentsMaxValue = new List<int>();
+        public List<double> similarity = new List<double>();
+
         public Dictionary<string, int> topicsAndNumberOfAppearances = new Dictionary<string, int>();
         public List<Dictionary<string, int>> documentsListsOfWords = new List<Dictionary<string, int>>();
 
-        public int[,] frequencyMatrix;
+        public double[,] frequencyMatrix;
 
         public int eliminatedStopwords = 0;
 
@@ -59,14 +62,15 @@ namespace PreluareText
                                                 '\b','\r','\v','\f','\'','+','\\'
             };
 
-            DirectoryInfo my_directory = new DirectoryInfo(reuters34FilePath);
+            DirectoryInfo my_directory = new DirectoryInfo(reuters7083FilePath);
             FileInfo[] file_info = my_directory.GetFiles("*.xml");
             XmlDocument my_xml_doc = new XmlDocument();
 
             this.stpWords = getStopwords(stopWordsFilePath);
-
+            int contor = 0;
             foreach (FileInfo file in file_info)
             {
+               
                 this.fileNames.Add(file.Name);
 
                 string[] wordsFromXML;
@@ -77,13 +81,13 @@ namespace PreluareText
                 XmlNodeList titleNode = my_xml_doc.DocumentElement.GetElementsByTagName(tag1);
                 XmlNodeList textNode = my_xml_doc.DocumentElement.GetElementsByTagName(tag2);
 
-                XmlNodeList topicNode = my_xml_doc.GetElementsByTagName("metadata");
+                //XmlNodeList topicNode = my_xml_doc.GetElementsByTagName("metadata");
 
-                foreach (XmlNode node in topicNode)
-                {
-                    var l = node.SelectNodes("/newsitem/metadata/codes");
-                    this.documentsTopics.Add(l[2].FirstChild.Attributes[0].Value);
-                }
+                //foreach (XmlNode node in topicNode)
+                //{
+                //    var l = node.SelectNodes("/newsitem/metadata/codes");
+                //    this.documentsTopics.Add(l[2].FirstChild.Attributes[0].Value);
+                //}
 
                 wordsWelded = titleNode[0].InnerText + textNode[0].InnerText;
 
@@ -178,26 +182,30 @@ namespace PreluareText
 
                 }
 
+
+                this.documentsMaxValue.Add(maxValueFromDocument);
                 this.documentsListsOfWords.Add(wordsAndFrequencyFromEachFile);
 
-                //normalizare
-                List<double> normalisedVectorForCurrentFile = new List<double>();
-                foreach (var line in wordsAndFrequencyFromEachFile)
-                {
-                    double value = (double)line.Value / maxValueFromDocument;
-                    normalisedVectorForCurrentFile.Add(value);
-                }
-                this.normalisedVectors.Add(normalisedVectorForCurrentFile);
+                Console.WriteLine(contor++);
+
+                ////normalizare
+                //List<double> normalisedVectorForCurrentFile = new List<double>();
+                //foreach (var line in wordsAndFrequencyFromEachFile)
+                //{
+                //    double value = (double)line.Value / maxValueFromDocument;
+                //    normalisedVectorForCurrentFile.Add(value);
+                //}
+                //this.normalisedVectors.Add(normalisedVectorForCurrentFile);
 
             }
 
-            this.documentsTopics.Sort();
-            List<string> documentsTopicsUnique = getUniqueWords(documentsTopics);
-            for (int l = 0; l < documentsTopicsUnique.Count(); l++)
-            {
-                int numberOfAppearances = documentsTopics.Count(word => word == documentsTopicsUnique[l]);
-                this.topicsAndNumberOfAppearances.Add(documentsTopicsUnique[l], numberOfAppearances);
-            }
+            //this.documentsTopics.Sort();
+            //List<string> documentsTopicsUnique = getUniqueWords(documentsTopics);
+            //for (int l = 0; l < documentsTopicsUnique.Count(); l++)
+            //{
+            //    int numberOfAppearances = documentsTopics.Count(word => word == documentsTopicsUnique[l]);
+            //    this.topicsAndNumberOfAppearances.Add(documentsTopicsUnique[l], numberOfAppearances);
+            //}
 
             removeStopWords(this.allWords, this.stpWords);
             this.allWords.Sort();
@@ -246,7 +254,7 @@ namespace PreluareText
             return unique;
         }
 
-        public int[,] buildFrequencyMatrix(int[,] matrix)
+        public double[,] buildFrequencyMatrix(double[,] matrix)
         {
             int line = 0;
 
@@ -370,20 +378,62 @@ namespace PreluareText
 
             }
 
+
+            this.documentsMaxValue.Add(maxValueFromQuery);
             this.documentsListsOfWords.Add(wordsAndFrequencyFromQuery);
 
             //normalizare
-            List<double> normalisedVectorForQuery = new List<double>();
-            foreach (var line in wordsAndFrequencyFromQuery)
-            {
-                double value = (double)line.Value / maxValueFromQuery;
-                normalisedVectorForQuery.Add(value);
-            }
-            this.normalisedVectors.Add(normalisedVectorForQuery);           
+            //List<double> normalisedVectorForQuery = new List<double>();
+            //foreach (var line in wordsAndFrequencyFromQuery)
+            //{
+            //    double value = (double)line.Value / maxValueFromQuery;
+            //    normalisedVectorForQuery.Add(value);
+            //}
+            //this.normalisedVectors.Add(normalisedVectorForQuery);           
 
             removeStopWords(this.allWords, this.stpWords);
             this.allWords.Sort();
 
+        }
+
+        public double[,] normalise(double[,] matrix, int lines, int columns)
+        {
+            int line = 0;
+            while (line < lines)
+            {
+                for (int i = 0; i < columns; i++)
+                {
+                    if (matrix[line, i] == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        matrix[line, i] = (double)matrix[line, i] / this.documentsMaxValue[line];
+                    }
+
+                }
+                line++;
+            }
+
+            return matrix;
+
+        }
+
+        public void similarityCalculation(int lineOfQuery, int lines, int columns, double[,] matrix)
+        {
+            int lineMatrix = 0;
+
+            while (lineMatrix < lines - 1)
+            {
+                double sum = 0;
+                for (int j = 0; j < columns; j++)
+                {
+                    sum += Math.Pow((matrix[lineMatrix, j] - matrix[lineOfQuery, j]), 2);
+                }
+                this.similarity.Add((double)Math.Sqrt(sum));
+                lineMatrix++;
+            }
         }
 
     }
